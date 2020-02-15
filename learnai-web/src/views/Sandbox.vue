@@ -335,7 +335,7 @@ export default {
         parsedJSON.layers.push(this.resultArray[i].returnData());
       }
 
-      console.log(parsedJSON);
+      console.log(JSON.stringify(parsedJSON));
     }
   },
   provide() {
