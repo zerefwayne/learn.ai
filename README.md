@@ -1,5 +1,8 @@
-# learn.ai
-Making machine learning education easy and accessible for all.
+![](https://raw.githubusercontent.com/zerefwayne/learn.ai/master/branding/color_text_logo_1x.png)  
+
+#### Making machine learning education easy and accessible for all.
+
+### About
 
 The main focus of this webapp is to demystify the concepts of machine learning for high-school students or any newcomers. Concepts are laid out in a very user-friendly manner coupled with interactive exercises.
 
