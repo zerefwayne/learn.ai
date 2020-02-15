@@ -13,11 +13,54 @@
               {{ layer.type }}
             </div>
             <div style="display: flex; align-items: center;">
-              <img
-                @click="addShape(layer.key)"
-                class="click-icon"
-                src="@/assets/add.svg"
-              />
+              <button
+                data-toggle="modal"
+                :data-target="'#'+layer.key+'-modal'"
+                data-backdrop="false"
+              >
+                <img class="click-icon" src="@/assets/add.svg" />
+              </button>
+              <div
+                class="modal fade"
+                :id="layer.key+'-modal'"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog custom-modal-style" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                        {{ layer.type }}
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      ...
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="button" class="btn btn-primary">
+                        Add Layer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </li>
         </ul>
@@ -203,25 +246,25 @@ export default {
       };
     },
     addShape(layerName) {
-        alert(layerName);
-    //   if (shapeName == "ellipse") {
-    //     let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
-    //     ellipse.propContent([
-    //       "Layer Type",
-    //       "Number of Nodes",
-    //       "Activation Type"
-    //     ]);
-    //     this.resultArray.push(ellipse);
-    //   } else if (shapeName == "rectangle") {
-    //     let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
+      alert(layerName);
+      //   if (shapeName == "ellipse") {
+      //     let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
+      //     ellipse.propContent([
+      //       "Layer Type",
+      //       "Number of Nodes",
+      //       "Activation Type"
+      //     ]);
+      //     this.resultArray.push(ellipse);
+      //   } else if (shapeName == "rectangle") {
+      //     let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
 
-    //     rectangle.propContent([
-    //       "Layer Type",
-    //       "Number of Nodes",
-    //       "Activation Type"
-    //     ]);
-    //     this.resultArray.push(rectangle);
-    //   }
+      //     rectangle.propContent([
+      //       "Layer Type",
+      //       "Number of Nodes",
+      //       "Activation Type"
+      //     ]);
+      //     this.resultArray.push(rectangle);
+      //   }
     },
     arrangeShapes() {
       this.resultArray.sort((a, b) => {
@@ -274,6 +317,7 @@ export default {
     flex-direction: column;
     padding: 1rem 3rem;
     font-family: "IBM Plex Mono" !important;
+    position: relative;
   }
 
   .section-header {
@@ -294,6 +338,8 @@ export default {
 
     display: flex;
     justify-content: space-between;
+
+    position: relative;
   }
 
   .action-button {
@@ -324,6 +370,14 @@ export default {
 
   .click-icon {
     cursor: pointer;
+  }
+
+  .custom-modal-style{
+
+      .modal-title {
+          color: black;
+      }
+
   }
 }
 </style>
