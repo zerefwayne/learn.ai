@@ -35,7 +35,7 @@
       <div>
         <h5 class="section-header">Actions</h5>
         <ul class="list-group">
-          <li class="list-group-item action-button">Train</li>
+          <li class="list-group-item action-button" @click="arrangeShapes">Arrange</li>
           <li class="list-group-item action-button">Download .py</li>
           <li class="list-group-item action-button">Train</li>
         </ul>
@@ -86,10 +86,11 @@ export default {
         sketch.createCanvas(this.provider.width, this.provider.height);
 
         sketch.draw = () => {
-          sketch.background("#3d3d3d");
+          sketch.background("#2d2d2d");
 
           for (var i = 0; i < this.resultArray.length; i++) {
             this.resultArray[i].display();
+            this.resultArray[i].rem();
           }
         };
       };
@@ -128,42 +129,46 @@ export default {
         if (this.resultArray[this.active].type == "ellipse") {
           this.resultArray[this.active].x = sketch.mouseX;
           this.resultArray[this.active].y = sketch.mouseY;
+          this.resultArray[this.active].rem();
         }
         if (this.resultArray[this.active].type == "rectangle") {
           this.resultArray[this.active].x =
             sketch.mouseX - this.resultArray[this.active].sizex / 2;
           this.resultArray[this.active].y =
             sketch.mouseY - this.resultArray[this.active].sizey / 2;
+          this.resultArray[this.active].rem();
         }
       };
 
       sketch.mouseReleased = () => {
         this.active = null;
       };
-
-      sketch.mouseClicked = () => {
-        if (
-          sketch.mouseX >= 25 &&
-          sketch.mouseX <= 55 &&
-          sketch.mouseY >= 5 &&
-          sketch.mouseY <= 35
-        ) {
-          this.resultArray.push(new Block("ellipse", 100, 20, 30, 30));
-        } else if (
-          sketch.mouseX >= 25 &&
-          sketch.mouseX <= 55 &&
-          sketch.mouseY >= 50 &&
-          sketch.mouseY <= 80
-        ) {
-          this.resultArray.push(new Block("rectangle", 85, 50, 30, 30));
-        }
-      };
     },
     addShape(shapeName) {
       if (shapeName == "ellipse") {
-        this.resultArray.push(new Block("ellipse", 100, 20, 30, 30));
+        let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
+        ellipse.propContent(["enter the name"]);
+        this.resultArray.push(ellipse);
       } else if (shapeName == "rectangle") {
-        this.resultArray.push(new Block("rectangle", 85, 50, 30, 30));
+        let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
+
+        rectangle.propContent(["enter the name"]);
+        this.resultArray.push(rectangle);
+      }
+    },
+    arrangeShapes() {
+      this.resultArray.sort((a, b) => {
+        return a.x - b.x;
+      });
+      for (var i = 0; i < this.resultArray.length; i++) {
+        if (i == 0) {
+          this.resultArray[i].x = this.resultArray[i].sizex + 200;
+        }
+        if (i > 0) {
+          this.resultArray[i].x =
+            this.resultArray[i - 1].x + 60 + this.resultArray[i - 1].sizex;
+        }
+        this.resultArray[i].y = this.provider.height / 2 - this.resultArray[i].sizey / 2;
       }
     }
   },
@@ -237,6 +242,7 @@ export default {
     justify-content: space-between;
 
     width: fit-content;
+    cursor: pointer;
   }
 
   .canvas-pane {
