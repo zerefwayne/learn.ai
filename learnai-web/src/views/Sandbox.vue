@@ -4,27 +4,17 @@
       <div>
         <h5 class="section-header">Blocks</h5>
         <ul class="list-group">
-          <li class="list-group-item block-button">
+          <li
+            class="list-group-item block-button"
+            v-for="layer in layers"
+            :key="layer.type"
+          >
             <div>
-              Dense Layer
+              {{ layer.type }}
             </div>
             <div style="display: flex; align-items: center;">
-              <img class="click-icon mr-2" src="@/assets/info.svg" />
               <img
-                @click="addShape('ellipse')"
-                class="click-icon"
-                src="@/assets/add.svg"
-              />
-            </div>
-          </li>
-          <li class="list-group-item block-button">
-            <div>
-              Max Pooling Layer
-            </div>
-            <div>
-              <img class="click-icon mr-2" src="@/assets/info.svg" />
-              <img
-                @click="addShape('rectangle')"
+                @click="addShape(layer.key)"
                 class="click-icon"
                 src="@/assets/add.svg"
               />
@@ -87,6 +77,7 @@ export default {
       layers: [
         {
           type: "Conv Layer",
+          key: "conv",
           required_data: [
             {
               key: "n_filters",
@@ -108,6 +99,7 @@ export default {
         },
         {
           type: "Dense Layer",
+          key: "dense",
           required_data: [
             {
               key: "nodes",
@@ -121,6 +113,7 @@ export default {
         },
         {
           type: "Max Pool Layer",
+          key: "maxpool",
           required_data: [
             {
               key: "kernel_shape",
@@ -129,7 +122,8 @@ export default {
           ]
         },
         {
-          type: "Flatten Layer"
+          type: "Flatten Layer",
+          key: "flatten"
         }
       ]
     };
@@ -208,25 +202,26 @@ export default {
         this.active = null;
       };
     },
-    addShape(shapeName) {
-      if (shapeName == "ellipse") {
-        let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
-        ellipse.propContent([
-          "Layer Type",
-          "Number of Nodes",
-          "Activation Type"
-        ]);
-        this.resultArray.push(ellipse);
-      } else if (shapeName == "rectangle") {
-        let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
+    addShape(layerName) {
+        alert(layerName);
+    //   if (shapeName == "ellipse") {
+    //     let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
+    //     ellipse.propContent([
+    //       "Layer Type",
+    //       "Number of Nodes",
+    //       "Activation Type"
+    //     ]);
+    //     this.resultArray.push(ellipse);
+    //   } else if (shapeName == "rectangle") {
+    //     let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
 
-        rectangle.propContent([
-          "Layer Type",
-          "Number of Nodes",
-          "Activation Type"
-        ]);
-        this.resultArray.push(rectangle);
-      }
+    //     rectangle.propContent([
+    //       "Layer Type",
+    //       "Number of Nodes",
+    //       "Activation Type"
+    //     ]);
+    //     this.resultArray.push(rectangle);
+    //   }
     },
     arrangeShapes() {
       this.resultArray.sort((a, b) => {
