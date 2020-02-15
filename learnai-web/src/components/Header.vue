@@ -48,10 +48,12 @@ export default {
       is_course: true
     };
   },
+  mounted() {
+    this.is_course = this.$route.name === "Course";
+  },
   watch: {
     $route(to) {
       this.is_course = to.name === "Course";
-      console.log(this.is_course);
     }
   }
 };
