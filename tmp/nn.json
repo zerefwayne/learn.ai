@@ -1,0 +1,22 @@
+{
+    "model": 2,
+    "layers": [ 
+        {
+            "type": "dense",
+            "no": 4,
+            "activation": "relu"
+        },
+        {
+            "type": "dense",
+            "no": 1,
+            "activation": "relu"
+        }
+    ],
+    "parameters": {
+        "optimizer": {
+            "type": "adam",
+            "lr": "0.02"
+        },
+        "loss": "binaryCrossentropy"
+    }
+}
