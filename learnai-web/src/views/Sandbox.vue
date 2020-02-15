@@ -17,6 +17,7 @@
                 data-toggle="modal"
                 :data-target="'#' + layer.key + '-modal'"
                 data-backdrop="false"
+                style="background: transparent; border: none; box-shadow: none; outline: none;"
               >
                 <img class="click-icon" src="@/assets/add.svg" />
               </button>
