@@ -3,13 +3,17 @@
     <div class="option-pane">
       Hello
     </div>
+
     <div class="canvas-pane">
-      <canvas id="sandbox-canvas" ref="sandboxcanvas"></canvas>
+      <div ref="sandboxcanvas"></div>
     </div>
   </div>
 </template>
 
 <script>
+import p5 from "p5";
+import sketch from "@/assets/sketch.js";
+
 export default {
   name: "Sandbox",
   data() {
@@ -18,9 +22,24 @@ export default {
       // so child components will update when `context` changes.
       provider: {
         // This is the CanvasRenderingContext that children will draw to.
-        context: null
+        context: null,
+        width: 0,
+        height: 0
       }
     };
+  },
+  methods: {
+    s(sketch) {
+      sketch.setup = () => {
+        sketch.createCanvas(this.provider.width, this.provider.height);
+
+        sketch.draw = () => {
+          sketch.background(0);
+          sketch.fill(255);
+          sketch.rect(0, 0, 50, 50);
+        };
+      };
+    }
   },
   provide() {
     return {
@@ -28,12 +47,14 @@ export default {
     };
   },
   mounted() {
-    this.provider.context = this.$refs["sandboxcanvas"].getContext("2d");
+    let myp5 = new p5(this.s, this.$refs["sandboxcanvas"]);
 
-    this.$refs["sandboxcanvas"].width = this.$refs["sandboxcanvas"].parentElement.clientWidth;
-    this.$refs["sandboxcanvas"].height = this.$refs["sandboxcanvas"].parentElement.clientHeight;
-    this.$refs["sandboxcanvas"].fillstyle = "white";
+    console.log("MyP5", myp5);
 
+    this.provider.width = this.$refs["sandboxcanvas"].parentElement.clientWidth;
+    this.provider.height = this.$refs[
+      "sandboxcanvas"
+    ].parentElement.clientHeight;
   }
 };
 </script>
@@ -64,9 +85,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-
+    overflow: hidden;
     position: relative;
   }
 }
-
 </style>
