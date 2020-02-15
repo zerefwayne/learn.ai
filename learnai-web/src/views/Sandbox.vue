@@ -1,7 +1,45 @@
 <template>
   <div class="app-sandbox">
     <div class="option-pane">
-      Hello
+      <div>
+        <h5 class="section-header">Blocks</h5>
+        <ul class="list-group">
+          <li class="list-group-item block-button">
+            <div>
+              Dense Layer
+            </div>
+            <div style="display: flex; align-items: center;">
+              <img class="click-icon mr-2" src="@/assets/info.svg" />
+              <img
+                @click="addShape('ellipse')"
+                class="click-icon"
+                src="@/assets/add.svg"
+              />
+            </div>
+          </li>
+          <li class="list-group-item block-button">
+            <div>
+              Max Pooling Layer
+            </div>
+            <div>
+              <img class="click-icon mr-2" src="@/assets/info.svg" />
+              <img
+                @click="addShape('rectangle')"
+                class="click-icon"
+                src="@/assets/add.svg"
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="section-header">Actions</h5>
+        <ul class="list-group">
+          <li class="list-group-item action-button">Train</li>
+          <li class="list-group-item action-button">Download .py</li>
+          <li class="list-group-item action-button">Train</li>
+        </ul>
+      </div>
     </div>
 
     <div class="canvas-pane">
@@ -32,11 +70,14 @@ export default {
       x: 0,
       y: 0,
       resultArray: [],
-      active: null
+      active: null,
+      sketch: null
     };
   },
   methods: {
     s(sketch) {
+      this.sketch = sketch;
+
       Block = GenerateBlock(sketch);
 
       console.log("Prototype", Object.getPrototypeOf(sketch));
@@ -46,11 +87,6 @@ export default {
 
         sketch.draw = () => {
           sketch.background("#3d3d3d");
-          sketch.fill(250, 200, 200, 50);
-          sketch.ellipse(40, 20, 30, 30);
-
-          sketch.fill(250, 200, 200, 50);
-          sketch.rect(25, 50, 30, 30);
 
           for (var i = 0; i < this.resultArray.length; i++) {
             this.resultArray[i].display();
@@ -63,7 +99,8 @@ export default {
           if (
             this.resultArray[i].type == "rectangle" &&
             sketch.mouseX >= this.resultArray[i].x &&
-            sketch.mouseX <= this.resultArray[i].x + this.resultArray[i].sizex &&
+            sketch.mouseX <=
+              this.resultArray[i].x + this.resultArray[i].sizex &&
             sketch.mouseY >= this.resultArray[i].y &&
             sketch.mouseY <= this.resultArray[i].y + this.resultArray[i].sizey
           ) {
@@ -72,10 +109,14 @@ export default {
           }
           if (
             this.resultArray[i].type == "ellipse" &&
-            sketch.mouseX >= this.resultArray[i].x - this.resultArray[i].sizex / 2 &&
-            sketch.mouseX <= this.resultArray[i].x + this.resultArray[i].sizex / 2 &&
-            sketch.mouseY >= this.resultArray[i].y - this.resultArray[i].sizey / 2 &&
-            sketch.mouseY <= this.resultArray[i].y + this.resultArray[i].sizey / 2
+            sketch.mouseX >=
+              this.resultArray[i].x - this.resultArray[i].sizex / 2 &&
+            sketch.mouseX <=
+              this.resultArray[i].x + this.resultArray[i].sizex / 2 &&
+            sketch.mouseY >=
+              this.resultArray[i].y - this.resultArray[i].sizey / 2 &&
+            sketch.mouseY <=
+              this.resultArray[i].y + this.resultArray[i].sizey / 2
           ) {
             this.active = i;
             break;
@@ -117,6 +158,13 @@ export default {
           this.resultArray.push(new Block("rectangle", 85, 50, 30, 30));
         }
       };
+    },
+    addShape(shapeName) {
+      if (shapeName == "ellipse") {
+        this.resultArray.push(new Block("ellipse", 100, 20, 30, 30));
+      } else if (shapeName == "rectangle") {
+        this.resultArray.push(new Block("rectangle", 85, 50, 30, 30));
+      }
     }
   },
   provide() {
@@ -150,10 +198,45 @@ export default {
     border-right: 2px solid #f68000;
     z-index: 2;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    padding: 1rem 3rem;
+    font-family: "IBM Plex Mono" !important;
+  }
 
-    font-family: "IBM Plex Mono", "IBM Plex Sans", monospace;
+  .section-header {
+    font-family: "IBM Plex Mono", monospace;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  .block-button {
+    color: white;
+    background-color: transparent;
+    box-shadow: none;
+    border: 2px dashed #aaaaaa;
+    border-radius: 6px;
+    font-family: "IBM Plex Mono" !important;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .action-button {
+    color: white;
+    background-color: transparent;
+    box-shadow: none;
+    border: 2px dashed #aaaaaa;
+    border-radius: 6px;
+    font-family: "IBM Plex Mono" !important;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    display: flex;
+    justify-content: space-between;
+
+    width: fit-content;
   }
 
   .canvas-pane {
@@ -163,6 +246,10 @@ export default {
     align-items: center;
     overflow: hidden;
     position: relative;
+  }
+
+  .click-icon {
+    cursor: pointer;
   }
 }
 </style>
