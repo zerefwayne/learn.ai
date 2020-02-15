@@ -1,0 +1,26 @@
+Layers
+
+dense
+
+    - type dense
+    - no (Number of nodes int)
+    - activation (activation function string) relu tanh sigmoid linear
+
+conv
+
+    - n_filters (Number of filters int)
+    - kernel_shape (int)
+    - padding (int)
+    - activation same
+
+maxpool
+
+    - kernel_shape (int)
+
+flatten
+
+Hyperparameters
+
+    - optimizer - Adam (DONT SEND)
+    - loss - binarycrossentropy/mse
+    - learning rate - 0.02
