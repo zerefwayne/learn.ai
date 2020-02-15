@@ -103,12 +103,15 @@ class ModelCreator {
 
 
 
-var modelJson = JSON.parse('{"model": 2,"layers": [ {"type": "dense","no": 1, "activation": "tanh"},{ "type": "dense", "no": 1, "activation": "sigmoid"}], "parameters": { "optimizer": { "type": "adam", "lr": "0.02" },"loss": "binaryCrossentropy", "epochs": 10}}')
+var modelJson = JSON.parse('{"model": 2,"layers": [ {"type": "dense","no": 8, "activation": "tanh"}, { "type": "dense", "no": 1, "activation": "sigmoid"}], "parameters": { "optimizer": { "type": "adam", "lr": "0.02" },"loss": "binaryCrossentropy"}}')
 
-console.log(modelJson)
+var modelJson2 = JSON.parse('{"model": 2,"layers": [ {"type": "dense","no": 8, "activation": "tanh"},{ "type": "dense", "no": 4, "activation": "relu"}, { "type": "dense", "no": 1, "activation": "sigmoid"}], "parameters": { "optimizer": { "type": "adam", "lr": "0.02" },"loss": "binaryCrossentropy"}}')
+
+
 
 
 function initializeModelFromJSON(modelJson) {
+    console.log(modelJson)
     let inputSize = modelJson.model
     let layers = modelJson.layers
 
@@ -136,16 +139,91 @@ function initializeModelFromJSON(modelJson) {
 
 
 var runner = initializeModelFromJSON(modelJson)
+
+var X = [[0, 0], [0, 1], [1, 0], [1, 1]]
+var y = [[0], [1], [1], [0]]
+var XTest = [[1, 1], [1, 1], [1, 0], [1, 1], [0, 1],  [0, 1]]
+var epochs = 500
+
 runner.trainModel(
-    [[0, 0], [0, 1], [1, 0], [1, 1]],
-    [[0], [1], [1], [0]],
-    500
+    X,
+    y,
+    epochs
 ).then(() => {
     console.log("Done with training")
-    runner.makePredictions([[1, 1], [1, 1], [1, 1], [1, 0], [0, 1],  [0, 1]])
+    runner.makePredictions(XTest)
 })
 
+// var X = "X = np.array(" + X.toString() +  ")"
+
+
+function getTextsForLayer(layer) {
+    text = "nn.Linear(" + layer.kernel.shape + ")"
+    
+    if (layer.activation.__proto__.constructor.className === 'tanh') {
+        text += ", nn.Tanh(),"
+    } else if (layer.activation.__proto__.constructor.className === 'sigmoid') {
+        text += ", nn.Sigmoid(),"
+    } else if (layer.activation.__proto__.constructor.className === 'relu') {
+        text += ", nn.Relu(),"
+    } else if (layer.activation.__proto__.constructor.className === 'linear') {
+        text += ","
+    }
+    return text
+}
+console.log(runner.getTensorMap(X).shape)
+
+function getPytorchModel(modelData) {
+    let allImports = [
+        "import numpy as np",
+        "import torch",
+        "from torch import nn",
+        "from torch.autograd import Variable",
+        "from torch import FloatTensor",
+        "from torch import optim"
+    ];
+    let shapeX = runner.getTensorMap(X).shape
+    let shapeY = runner.getTensorMap(y).shape
+
+    let middleParts = [
+        "use_cuda = torch.cuda.is_available()",
+        "X = np.array(" + X +  ")",
+        "X = X.reshape(" + shapeX + ")",
+        "y = np.array(" + y + ")",
+        "y = y.reshape(" + shapeY + ")",
+        "# Converting the X to PyTorch-able data structure.",
+        "X_pt = Variable(FloatTensor(X))",
+        "X_pt = X_pt.cuda() if use_cuda else X_pt",
+        "# Converting the Y to PyTorch-able data structure.",
+        "Y_pt = Variable(FloatTensor(y), requires_grad=False)",
+        "Y_pt = Y_pt.cuda() if use_cuda else Y_pt"
+    ]
+
+
+    let modelsArea = ["model = nn.Sequential("]
+
+    modelData.layers.forEach(layer => {
+        modelsArea.push("\t" + getTextsForLayer(layer))
+    })
+
+    var str = modelsArea[modelsArea.length - 1]
+    str[str.length - 1] = ')'
+    modelsArea[modelsArea.length - 1] = str
+
+
+    allImports.forEach(text => {
+        console.log(text)
+    })
+
+    middleParts.forEach(text => {
+        console.log(text)
+    })
+
+    modelsArea.forEach(text => {
+        console.log(text)
+    })
+}
 // Train model with fit().
 
 // // Run inference with predict().
-
+getPytorchModel(runner.model)

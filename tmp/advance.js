@@ -215,7 +215,7 @@ class ModelCreator {
 
     async trainModelImages(data) {
         
-        const BATCH_SIZE = 32;
+        const BATCH_SIZE = 64;
         const TRAIN_DATA_SIZE = 5000;
         const TEST_DATA_SIZE = 500;
         
@@ -241,7 +241,7 @@ class ModelCreator {
         
         return this.model.fit(trainXs, trainYs, {
             batchSize: BATCH_SIZE,
-            epochs: 10,
+            epochs: 20,
             shuffle: true
         });
     }
@@ -255,6 +255,7 @@ creator.addMaxPoolLayer()
 creator.flatten()
 
 creator.addDenseLayer(128, activation = 'relu')
+creator.addDenseLayer(64, activation = 'relu')
 creator.addDenseLayer(10, 'softmax')
 
 creator.compileModel({ 
@@ -266,6 +267,7 @@ creator.compileModel({
 
 var rawImage;
 function save() {
+
     var raw = tf.browser.fromPixels(rawImage,1);
     var resized = tf.image.resizeBilinear(raw, [28,28]);
     var tensor = resized.expandDims(0);
@@ -290,10 +292,8 @@ async function run() {
     // tfvis.show.modelSummary({name: 'Model Architecture'}, creator.model);
 
     await creator.trainModelImages(data)
-    // await model.save('downloads://my_model');
+    await creator.model.save('downloads://my_model');
     save()
-    
-    
 }
 
 document.addEventListener('DOMContentLoaded', run);
