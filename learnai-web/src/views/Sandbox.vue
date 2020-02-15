@@ -35,7 +35,9 @@
       <div>
         <h5 class="section-header">Actions</h5>
         <ul class="list-group">
-          <li class="list-group-item action-button" @click="arrangeShapes">Arrange</li>
+          <li class="list-group-item action-button" @click="arrangeShapes">
+            Arrange
+          </li>
           <li class="list-group-item action-button">Download .py</li>
           <li class="list-group-item action-button">Train</li>
         </ul>
@@ -147,12 +149,20 @@ export default {
     addShape(shapeName) {
       if (shapeName == "ellipse") {
         let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
-        ellipse.propContent(["enter the name"]);
+        ellipse.propContent([
+          "Layer Type",
+          "Number of Nodes",
+          "Activation Type"
+        ]);
         this.resultArray.push(ellipse);
       } else if (shapeName == "rectangle") {
         let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
 
-        rectangle.propContent(["enter the name"]);
+        rectangle.propContent([
+          "Layer Type",
+          "Number of Nodes",
+          "Activation Type"
+        ]);
         this.resultArray.push(rectangle);
       }
     },
@@ -162,13 +172,14 @@ export default {
       });
       for (var i = 0; i < this.resultArray.length; i++) {
         if (i == 0) {
-          this.resultArray[i].x = this.resultArray[i].sizex + 200;
+          this.resultArray[i].x = this.resultArray[i].sizex + 50;
         }
         if (i > 0) {
           this.resultArray[i].x =
-            this.resultArray[i - 1].x + 60 + this.resultArray[i - 1].sizex;
+            this.resultArray[i - 1].x + 80 + this.resultArray[i - 1].sizex;
         }
-        this.resultArray[i].y = this.provider.height / 2 - this.resultArray[i].sizey / 2;
+        this.resultArray[i].y =
+          this.provider.height / 2 - this.resultArray[i].sizey / 2;
       }
     }
   },
