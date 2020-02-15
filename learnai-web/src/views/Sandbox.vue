@@ -52,19 +52,24 @@
 
 <script>
 import p5 from "p5";
-import GenerateBlock from "@/interactions/object.js";
-// import sketch from "@/assets/sketch.js";
 
+import ConvLayerFunc from "@/interactions/ConvLayer.js";
+import DenseLayerFunc from "@/interactions/DenseLayer.js";
+import MaxPoolLayerFunc from "@/interactions/MaxPoolLayer.js";
+import FlattenFunc from "@/interactions/Flatten.js";
+import ObjectFunc from "@/interactions/object.js";
+
+let ConvLayer = null;
+let DenseLayer = null;
+let MaxPoolLayer = null;
+let FlattenLayer = null;
 let Block = null;
 
 export default {
   name: "Sandbox",
   data() {
     return {
-      // By creating the provider in the data property, it becomes reactive,
-      // so child components will update when `context` changes.
       provider: {
-        // This is the CanvasRenderingContext that children will draw to.
         context: null,
         width: 0,
         height: 0
@@ -73,14 +78,71 @@ export default {
       y: 0,
       resultArray: [],
       active: null,
-      sketch: null
+      sketch: null,
+      hyperparameters: {
+        optimizer: "Adam",
+        loss: "binarycrossentropy/mse",
+        learning_rate: 0.02
+      },
+      layers: [
+        {
+          type: "Conv Layer",
+          required_data: [
+            {
+              key: "n_filters",
+              text: "Number of Filters"
+            },
+            {
+              key: "kernel_shape",
+              text: "Shape of Kernel"
+            },
+            {
+              key: "padding",
+              text: "Padding"
+            },
+            {
+              key: "activation",
+              text: "Activation Function"
+            }
+          ]
+        },
+        {
+          type: "Dense Layer",
+          required_data: [
+            {
+              key: "nodes",
+              text: "Number of Nodes"
+            },
+            {
+              key: "activation",
+              text: "Activation Function"
+            }
+          ]
+        },
+        {
+          type: "Max Pool Layer",
+          required_data: [
+            {
+              key: "kernel_shape",
+              text: "Shape of Kernel"
+            }
+          ]
+        },
+        {
+          type: "Flatten Layer"
+        }
+      ]
     };
   },
   methods: {
     s(sketch) {
       this.sketch = sketch;
 
-      Block = GenerateBlock(sketch);
+      ConvLayer = ConvLayerFunc(sketch);
+      DenseLayer = DenseLayerFunc(sketch);
+      MaxPoolLayer = MaxPoolLayerFunc(sketch);
+      FlattenLayer = FlattenFunc(sketch);
+      Block = ObjectFunc(sketch);
 
       console.log("Prototype", Object.getPrototypeOf(sketch));
 
