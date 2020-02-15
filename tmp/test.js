@@ -45,24 +45,25 @@ class ModelCreator {
     }
 
     makePredictions(testXList) {
+        var data = this.getTensorMap(testXList)
+        console.log(data.data)
         this.model.predict(this.getTensorMap(testXList)).print()
     }
 }
 
 var creator = new ModelCreator(2)
-creator.addDenseLayer(8)
+creator.addDenseLayer(4)
 creator.addDenseLayer(1)
-creator.compileModel({optimizer: 'sgd', loss: 'meanSquaredError'})
+creator.compileModel({optimizer: tf.train.adam(learningRate = 0.05, beta1 = 0.2), loss: 'binaryCrossentropy'})
 creator.trainModel(
     [[0, 0], [0, 1], [1, 0], [1, 1]],
     [[0], [1], [1], [0]],
-    3
+    500
 ).then(() => {
     console.log("Done with training")
-    creator.makePredictions([[1, 1]])
+    creator.makePredictions([[1, 1], [1, 0], [1, 1], [0, 1]])
     console.log(creator.model)
 })
-console.log(creator)
 
 
 // Train model with fit().
