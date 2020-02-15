@@ -30,10 +30,10 @@ export default {
   mounted() {
     this.provider.context = this.$refs["sandboxcanvas"].getContext("2d");
 
-    this.$refs["sandboxcanvas"].width = this.$refs["sandboxcanvas"].parentElement.clientWidth / 2;
-    this.$refs["sandboxcanvas"].height = this.$refs["sandboxcanvas"].parentElement.clientHeight / 2;
+    this.$refs["sandboxcanvas"].width = this.$refs["sandboxcanvas"].parentElement.clientWidth;
+    this.$refs["sandboxcanvas"].height = this.$refs["sandboxcanvas"].parentElement.clientHeight;
     this.$refs["sandboxcanvas"].fillstyle = "white";
-    
+
   }
 };
 </script>
