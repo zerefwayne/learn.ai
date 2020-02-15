@@ -25,18 +25,20 @@ export default {
         context: null,
         width: 0,
         height: 0
-      }
+      },
+      x: 0,
+      y: 0
     };
   },
   methods: {
     s(sketch) {
+      console.log("Prototype", Object.getPrototypeOf(sketch));
+
       sketch.setup = () => {
         sketch.createCanvas(this.provider.width, this.provider.height);
 
         sketch.draw = () => {
           sketch.background(0);
-          sketch.fill(255);
-          sketch.rect(0, 0, 50, 50);
         };
       };
     }
@@ -48,8 +50,6 @@ export default {
   },
   mounted() {
     let myp5 = new p5(this.s, this.$refs["sandboxcanvas"]);
-
-    console.log("MyP5", myp5);
 
     this.provider.width = this.$refs["sandboxcanvas"].parentElement.clientWidth;
     this.provider.height = this.$refs[
