@@ -14,7 +14,7 @@ export default function(sketch) {
     this.returnData = function() {
       return {
         type: this.type,
-        no: this.nodes,
+        no: parseInt(this.nodes),
         activation: this.activation
       };
     };
@@ -51,16 +51,8 @@ export default function(sketch) {
 
       sketch.textSize(14);
       sketch.fill(255, 255, 255);
-      sketch.text(
-        this.params[0]["Layer Type"],
-        this.x + this.sizex / 4,
-        this.y - 2
-      );
-      sketch.text(
-        this.params[2]["Activation Type"],
-        this.x + this.sizex + this.sizex / 2,
-        this.y - 2
-      );
+      sketch.text(this.type, this.x + this.sizex / 4, this.y - 2);
+      sketch.text(this.text, this.x + this.sizex + this.sizex / 2, this.y - 2);
       this.button = sketch.createButton("edit");
       this.button.position(
         this.x + this.sizex / 2 + this.sizex / 3,

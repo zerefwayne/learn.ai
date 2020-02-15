@@ -15,14 +15,14 @@
             <div style="display: flex; align-items: center;">
               <button
                 data-toggle="modal"
-                :data-target="'#'+layer.key+'-modal'"
+                :data-target="'#' + layer.key + '-modal'"
                 data-backdrop="false"
               >
                 <img class="click-icon" src="@/assets/add.svg" />
               </button>
               <div
                 class="modal fade"
-                :id="layer.key+'-modal'"
+                :id="layer.key + '-modal'"
                 tabindex="-1"
                 role="dialog"
                 aria-labelledby="exampleModalLabel"
@@ -34,27 +34,43 @@
                       <h5 class="modal-title" id="exampleModalLabel">
                         {{ layer.type }}
                       </h5>
-                      <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
                     </div>
                     <div class="modal-body">
-                      ...
+                      <form>
+                        <div
+                          class="form-group"
+                          v-for="formgroup in layer.required_data"
+                          :key="formgroup.key"
+                        >
+                          <label for="exampleInputEmail1">{{
+                            formgroup.text
+                          }}</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            :placeholder="'Enter ' + formgroup.text"
+                            autocomplete="off"
+                            v-model="modal_data[formgroup.key]"
+                          />
+                        </div>
+                      </form>
                     </div>
                     <div class="modal-footer">
                       <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn action-button mb-0 mr-2"
                         data-dismiss="modal"
                       >
-                        Close
+                        Cancel
                       </button>
-                      <button type="button" class="btn btn-primary">
+                      <button
+                        type="button"
+                        class="btn action-button mb-0"
+                        data-dismiss="modal"
+                        @click="addLayer(layer.key)"
+                      >
                         Add Layer
                       </button>
                     </div>
@@ -72,7 +88,9 @@
             Arrange
           </li>
           <li class="list-group-item action-button">Download .py</li>
-          <li class="list-group-item action-button">Train</li>
+          <li class="list-group-item action-button" @click="parseMLGraph()">
+            Train
+          </li>
         </ul>
       </div>
     </div>
@@ -116,6 +134,14 @@ export default {
         optimizer: "Adam",
         loss: "binarycrossentropy/mse",
         learning_rate: 0.02
+      },
+      modal_data: {
+        type: null,
+        n_filters: null,
+        kernel_shape: null,
+        padding: null,
+        activation: null,
+        no: null
       },
       layers: [
         {
@@ -199,7 +225,6 @@ export default {
       sketch.mousePressed = () => {
         for (var i = 0; i < this.resultArray.length; i++) {
           if (
-            this.resultArray[i].type == "rectangle" &&
             sketch.mouseX >= this.resultArray[i].x &&
             sketch.mouseX <=
               this.resultArray[i].x + this.resultArray[i].sizex &&
@@ -209,62 +234,72 @@ export default {
             this.active = i;
             break;
           }
-          if (
-            this.resultArray[i].type == "ellipse" &&
-            sketch.mouseX >=
-              this.resultArray[i].x - this.resultArray[i].sizex / 2 &&
-            sketch.mouseX <=
-              this.resultArray[i].x + this.resultArray[i].sizex / 2 &&
-            sketch.mouseY >=
-              this.resultArray[i].y - this.resultArray[i].sizey / 2 &&
-            sketch.mouseY <=
-              this.resultArray[i].y + this.resultArray[i].sizey / 2
-          ) {
-            this.active = i;
-            break;
-          }
         }
       };
 
       sketch.mouseDragged = () => {
-        if (this.resultArray[this.active].type == "ellipse") {
-          this.resultArray[this.active].x = sketch.mouseX;
-          this.resultArray[this.active].y = sketch.mouseY;
-          this.resultArray[this.active].rem();
-        }
-        if (this.resultArray[this.active].type == "rectangle") {
-          this.resultArray[this.active].x =
-            sketch.mouseX - this.resultArray[this.active].sizex / 2;
-          this.resultArray[this.active].y =
-            sketch.mouseY - this.resultArray[this.active].sizey / 2;
-          this.resultArray[this.active].rem();
-        }
+        this.resultArray[this.active].x =
+          sketch.mouseX - this.resultArray[this.active].sizex / 2;
+        this.resultArray[this.active].y =
+          sketch.mouseY - this.resultArray[this.active].sizey / 2;
+        this.resultArray[this.active].rem();
       };
 
       sketch.mouseReleased = () => {
         this.active = null;
       };
     },
-    addShape(layerName) {
-      alert(layerName);
-      //   if (shapeName == "ellipse") {
-      //     let ellipse = new Block("rectangle", 25, 50, 80, 80, 4);
-      //     ellipse.propContent([
-      //       "Layer Type",
-      //       "Number of Nodes",
-      //       "Activation Type"
-      //     ]);
-      //     this.resultArray.push(ellipse);
-      //   } else if (shapeName == "rectangle") {
-      //     let rectangle = new Block("rectangle", 25, 150, 80, 80, 4);
+    addLayer(layerName) {
+      if (layerName == "conv") {
+        let convLayer = new ConvLayer(
+          layerName,
+          this.modal_data["n_filters"],
+          this.modal_data["kernel_shape"],
+          this.modal_data["padding"],
+          this.modal_data["activation"],
+          25,
+          50,
+          80,
+          80
+        );
 
-      //     rectangle.propContent([
-      //       "Layer Type",
-      //       "Number of Nodes",
-      //       "Activation Type"
-      //     ]);
-      //     this.resultArray.push(rectangle);
-      //   }
+        this.resultArray.push(convLayer);
+      } else if (layerName == "dense") {
+        let denseLayer = new DenseLayer(
+          layerName,
+          this.modal_data["nodes"],
+          this.modal_data["activation"],
+          25,
+          50,
+          80,
+          80
+        );
+
+        this.resultArray.push(denseLayer);
+      } else if (layerName == "maxpool") {
+        let maxPoolLayer = new MaxPoolLayer(
+          layerName,
+          this.modal_data["kernel_shape"],
+          25,
+          50,
+          80,
+          80
+        );
+
+        this.resultArray.push(maxPoolLayer);
+      } else if (layerName == "flatten") {
+        let flattenLayer = new FlattenLayer(layerName, 25, 50, 80, 80);
+        this.resultArray.push(flattenLayer);
+      }
+
+      this.modal_data = {
+        type: null,
+        n_filters: null,
+        kernel_shape: null,
+        padding: null,
+        activation: null,
+        no: null
+      };
     },
     arrangeShapes() {
       this.resultArray.sort((a, b) => {
@@ -281,6 +316,25 @@ export default {
         this.resultArray[i].y =
           this.provider.height / 2 - this.resultArray[i].sizey / 2;
       }
+    },
+    parseMLGraph() {
+      let parsedJSON = {
+        model: 2,
+        layers: [],
+        parameters: {
+          optimizer: {
+            type: "adam",
+            lr: "0.02"
+          },
+          loss: "binarycrossentropy"
+        }
+      };
+
+      for (let i = 0; i < this.resultArray.length; i++) {
+        parsedJSON.layers.push(this.resultArray[i].returnData());
+      }
+
+      console.log(parsedJSON);
     }
   },
   provide() {
@@ -372,12 +426,36 @@ export default {
     cursor: pointer;
   }
 
-  .custom-modal-style{
+  .custom-modal-style {
+    .modal-content {
+      border-radius: 10px;
 
-      .modal-title {
-          color: black;
+      overflow: hidden;
+    }
+
+    .modal-title {
+      color: #121212;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .modal-header {
+      background-color: #efefef;
+      border-bottom: 2px solid #f68000;
+    }
+
+    .modal-body {
+      background-color: #ededed;
+      color: #121212;
+    }
+
+    .modal-footer {
+      background-color: #efefef;
+      border-top: 2px solid #f68000;
+
+      .action-button {
+        color: #121212;
       }
-
+    }
   }
 }
 </style>

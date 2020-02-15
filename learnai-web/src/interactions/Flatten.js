@@ -37,26 +37,26 @@ export default function(sketch) {
 
       sketch.fill(255, 255, 255);
       sketch.rect(this.x, this.y, this.sizex, this.sizey, this.radius);
-      sketch.rect(
-        this.x + this.sizex + 5,
-        this.y + this.sizey / 4,
-        this.sizex / 2,
-        this.sizey / 2,
-        this.radius
-      );
+      // sketch.rect(
+      //   this.x + this.sizex + 5,
+      //   this.y + this.sizey / 4,
+      //   this.sizex / 2,
+      //   this.sizey / 2,
+      //   this.radius
+      // );
 
       sketch.textSize(14);
       sketch.fill(255, 255, 255);
       sketch.text(
-        this.params[0]["Layer Type"],
+        this.type,
         this.x + this.sizex / 4,
         this.y - 2
       );
-      sketch.text(
-        this.params[2]["Activation Type"],
-        this.x + this.sizex + this.sizex / 2,
-        this.y - 2
-      );
+      // sketch.text(
+      //   this.params[2]["Activation Type"],
+      //   this.x + this.sizex + this.sizex / 2,
+      //   this.y - 2
+      // );
       this.button = sketch.createButton("edit");
       this.button.position(
         this.x + this.sizex / 2 + this.sizex / 3,

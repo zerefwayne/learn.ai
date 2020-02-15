@@ -1,5 +1,15 @@
 export default function(sketch) {
-  return function ConvLayer(type, n_filters, kernel_shape, padding, activation, x, y, sizex, sizey) {
+  return function ConvLayer(
+    type,
+    n_filters,
+    kernel_shape,
+    padding,
+    activation,
+    x,
+    y,
+    sizex,
+    sizey
+  ) {
     this.type = type;
     this.n_filters = n_filters;
     this.kernel_shape = kernel_shape;
@@ -16,10 +26,10 @@ export default function(sketch) {
     this.returnData = function() {
       return {
         type: this.type,
-        n_filters: this.n_filters,
+        n_filters: parseInt(this.n_filters),
         activation: this.activation,
-        kernel_shape: this.kernel_shape,
-        padding: this.padding
+        kernel_shape: parseInt(this.kernel_shape),
+        padding: parseInt(this.padding)
       };
     };
 
@@ -45,26 +55,22 @@ export default function(sketch) {
 
       sketch.fill(255, 255, 255);
       sketch.rect(this.x, this.y, this.sizex, this.sizey, this.radius);
-      sketch.rect(
-        this.x + this.sizex + 5,
-        this.y + this.sizey / 4,
-        this.sizex / 2,
-        this.sizey / 2,
-        this.radius
-      );
+      // sketch.rect(
+      //   this.x + this.sizex + 5,
+      //   this.y + this.sizey / 4,
+      //   this.sizex / 2,
+      //   this.sizey / 2,
+      //   this.radius
+      // );
 
       sketch.textSize(14);
       sketch.fill(255, 255, 255);
-      sketch.text(
-        this.params[0]["Layer Type"],
-        this.x + this.sizex / 4,
-        this.y - 2
-      );
-      sketch.text(
-        this.params[2]["Activation Type"],
-        this.x + this.sizex + this.sizex / 2,
-        this.y - 2
-      );
+      sketch.text(this.type, this.x + this.sizex / 4, this.y - 2);
+      // sketch.text(
+      //   this.activation,
+      //   this.x + this.sizex + this.sizex / 2,
+      //   this.y - 2
+      // );
       this.button = sketch.createButton("edit");
       this.button.position(
         this.x + this.sizex / 2 + this.sizex / 3,

@@ -13,7 +13,7 @@ export default function(sketch) {
     this.returnData = function() {
       return {
         type: this.type,
-        kernel_shape: this.kernel_shape
+        kernel_shape: parseInt(this.kernel_shape)
       };
     };
 
@@ -49,13 +49,9 @@ export default function(sketch) {
 
       sketch.textSize(14);
       sketch.fill(255, 255, 255);
+      sketch.text(this.type, this.x + this.sizex / 4, this.y - 2);
       sketch.text(
-        this.params[0]["Layer Type"],
-        this.x + this.sizex / 4,
-        this.y - 2
-      );
-      sketch.text(
-        this.params[2]["Activation Type"],
+        this.activation,
         this.x + this.sizex + this.sizex / 2,
         this.y - 2
       );
