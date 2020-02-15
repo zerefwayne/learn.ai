@@ -12,7 +12,10 @@
 
 <script>
 import p5 from "p5";
-import sketch from "@/assets/sketch.js";
+import GenerateBlock from "@/interactions/object.js";
+// import sketch from "@/assets/sketch.js";
+
+let Block = null;
 
 export default {
   name: "Sandbox",
@@ -27,19 +30,92 @@ export default {
         height: 0
       },
       x: 0,
-      y: 0
+      y: 0,
+      resultArray: [],
+      active: null
     };
   },
   methods: {
     s(sketch) {
+      Block = GenerateBlock(sketch);
+
       console.log("Prototype", Object.getPrototypeOf(sketch));
 
       sketch.setup = () => {
         sketch.createCanvas(this.provider.width, this.provider.height);
 
         sketch.draw = () => {
-          sketch.background(0);
+          sketch.background("#3d3d3d");
+          sketch.fill(250, 200, 200, 50);
+          sketch.ellipse(40, 20, 30, 30);
+
+          sketch.fill(250, 200, 200, 50);
+          sketch.rect(25, 50, 30, 30);
+
+          for (var i = 0; i < this.resultArray.length; i++) {
+            this.resultArray[i].display();
+          }
         };
+      };
+
+      sketch.mousePressed = () => {
+        for (var i = 0; i < this.resultArray.length; i++) {
+          if (
+            this.resultArray[i].type == "rectangle" &&
+            sketch.mouseX >= this.resultArray[i].x &&
+            sketch.mouseX <= this.resultArray[i].x + this.resultArray[i].sizex &&
+            sketch.mouseY >= this.resultArray[i].y &&
+            sketch.mouseY <= this.resultArray[i].y + this.resultArray[i].sizey
+          ) {
+            this.active = i;
+            break;
+          }
+          if (
+            this.resultArray[i].type == "ellipse" &&
+            sketch.mouseX >= this.resultArray[i].x - this.resultArray[i].sizex / 2 &&
+            sketch.mouseX <= this.resultArray[i].x + this.resultArray[i].sizex / 2 &&
+            sketch.mouseY >= this.resultArray[i].y - this.resultArray[i].sizey / 2 &&
+            sketch.mouseY <= this.resultArray[i].y + this.resultArray[i].sizey / 2
+          ) {
+            this.active = i;
+            break;
+          }
+        }
+      };
+
+      sketch.mouseDragged = () => {
+        if (this.resultArray[this.active].type == "ellipse") {
+          this.resultArray[this.active].x = sketch.mouseX;
+          this.resultArray[this.active].y = sketch.mouseY;
+        }
+        if (this.resultArray[this.active].type == "rectangle") {
+          this.resultArray[this.active].x =
+            sketch.mouseX - this.resultArray[this.active].sizex / 2;
+          this.resultArray[this.active].y =
+            sketch.mouseY - this.resultArray[this.active].sizey / 2;
+        }
+      };
+
+      sketch.mouseReleased = () => {
+        this.active = null;
+      };
+
+      sketch.mouseClicked = () => {
+        if (
+          sketch.mouseX >= 25 &&
+          sketch.mouseX <= 55 &&
+          sketch.mouseY >= 5 &&
+          sketch.mouseY <= 35
+        ) {
+          this.resultArray.push(new Block("ellipse", 100, 20, 30, 30));
+        } else if (
+          sketch.mouseX >= 25 &&
+          sketch.mouseX <= 55 &&
+          sketch.mouseY >= 50 &&
+          sketch.mouseY <= 80
+        ) {
+          this.resultArray.push(new Block("rectangle", 85, 50, 30, 30));
+        }
       };
     }
   },
