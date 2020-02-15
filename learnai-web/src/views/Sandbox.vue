@@ -110,13 +110,11 @@ import ConvLayerFunc from "@/interactions/ConvLayer.js";
 import DenseLayerFunc from "@/interactions/DenseLayer.js";
 import MaxPoolLayerFunc from "@/interactions/MaxPoolLayer.js";
 import FlattenFunc from "@/interactions/Flatten.js";
-import ObjectFunc from "@/interactions/object.js";
 
 let ConvLayer = null;
 let DenseLayer = null;
 let MaxPoolLayer = null;
 let FlattenLayer = null;
-let Block = null;
 
 class ModelCreator {
   constructor(noOfInputVars) {
@@ -246,35 +244,6 @@ function initializeModelFromJSON(modelJson) {
   return creator;
 }
 
-// var modelJson = JSON.parse(
-//   '{"model": 2,"layers": [ {"type": "dense","no": 8, "activation": "tanh"},{ "type": "dense", "no": 1, "activation": "sigmoid"}], "parameters": { "optimizer": { "type": "adam", "lr": "0.02" },"loss": "binaryCrossentropy", "epochs": 10}}'
-// );
-
-// var runner = initializeModelFromJSON(modelJson);
-
-// runner
-//   .trainModel(
-//     [
-//       [0, 0],
-//       [0, 1],
-//       [1, 0],
-//       [1, 1]
-//     ],
-//     [[0], [1], [1], [0]],
-//     500
-//   )
-//   .then(() => {
-//     console.log("Done with training");
-//     runner.makePredictions([
-//       [1, 1],
-//       [1, 1],
-//       [1, 1],
-//       [1, 0],
-//       [0, 1],
-//       [0, 1]
-//     ]);
-//   });
-
 export default {
   name: "Sandbox",
   data() {
@@ -291,8 +260,8 @@ export default {
       sketch: null,
       model_runner: null,
       hyperparameters: {
-        optimizer: "Adam",
-        loss: "binarycrossentropy/mse",
+        optimizer: "adam",
+        loss: "binarCrossentropy",
         learning_rate: 0.02
       },
       modal_data: {
@@ -365,7 +334,6 @@ export default {
       DenseLayer = DenseLayerFunc(sketch);
       MaxPoolLayer = MaxPoolLayerFunc(sketch);
       FlattenLayer = FlattenFunc(sketch);
-      Block = ObjectFunc(sketch);
 
       console.log("Prototype", Object.getPrototypeOf(sketch));
 
