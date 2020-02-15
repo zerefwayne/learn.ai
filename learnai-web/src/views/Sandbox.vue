@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-sandbox">
     Sandbox
   </div>
 </template>
@@ -10,4 +10,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+    .app-sandbox {
+        background-color: #353535;
+        height: 94vh;
+        width: 100%;
+        color: white;
+    }
+
+</style>

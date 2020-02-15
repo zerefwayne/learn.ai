@@ -1,8 +1,15 @@
 <template>
-  <nav class="navbar navbar-expand-lg">
+  <nav
+    :class="
+      is_course
+        ? 'navbar navbar-expand-lg course-style'
+        : 'navbar navbar-expand-lg sandbox-style'
+    "
+  >
     <div class="nav-left">
-      <router-link :to="{ name: 'Home' }" tag="a">
-        <div>Learn.ai</div>
+      <router-link :to="{ name: 'Home' }" tag="a" class="mr-3">
+        <img v-if="is_course" src="@/assets/logo_blue.svg" height="30px" />
+        <img v-if="!is_course" src="@/assets/logo_orange.svg" height="30px" />
       </router-link>
       <button
         class="navbar-toggler"
@@ -28,22 +35,32 @@
       </div>
     </div>
     <div class="nav-right">
-      Hello
+      <img src="@/assets/hooman.svg" height="30px" />
     </div>
   </nav>
 </template>
 
 <script>
 export default {
-  name: "app-header"
+  name: "app-header",
+  data() {
+    return {
+      is_course: true
+    };
+  },
+  watch: {
+    $route(to) {
+      this.is_course = to.name === "Course";
+      console.log(this.is_course);
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .navbar {
-  background-color: #ffeeee;
+  background-color: #ffffff;
   height: 6vh;
-  
 
   display: flex;
   justify-content: space-between;
@@ -54,6 +71,32 @@ export default {
   .nav-left {
     display: flex;
     align-items: center;
+  }
+}
+
+.course-style {
+  background-color: #ffffff;
+  border-bottom: 2px solid #dcdcdc;
+
+  .nav-item {
+    a {
+      color: gray;
+      font-weight: 500;
+    }
+    margin-left: 0.4rem;
+  }
+}
+
+.sandbox-style {
+  background-color: #2e2e2e;
+  border-bottom: 2px solid #f68000;
+
+  .nav-item {
+    a {
+      color: white;
+      font-weight: 500;
+    }
+    margin-left: 0.4rem;
   }
 }
 </style>
