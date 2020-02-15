@@ -25,10 +25,20 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <router-link :to="{ name: 'Course' }" tag="li" class="nav-item">
+          <router-link
+            :to="{ name: 'Course' }"
+            tag="li"
+            class="nav-item"
+            active-class="active"
+          >
             <a class="nav-link" href="#">Course</a>
           </router-link>
-          <router-link :to="{ name: 'Sandbox' }" tag="li" class="nav-item">
+          <router-link
+            :to="{ name: 'Sandbox' }"
+            tag="li"
+            class="nav-item"
+            active-class="active"
+          >
             <a class="nav-link" href="#">Sandbox</a>
           </router-link>
         </ul>
@@ -70,6 +80,8 @@ export default {
 
   padding: 0 2rem;
 
+  transition: all 200ms ease-in-out;
+
   .nav-left {
     display: flex;
     align-items: center;
@@ -79,6 +91,13 @@ export default {
 .course-style {
   background-color: #ffffff;
   border-bottom: 2px solid #dcdcdc;
+  padding: 0 21rem;
+
+  .active {
+    a.nav-link {
+      color: #6d45e2;
+    }
+  }
 
   .nav-item {
     a {
@@ -92,6 +111,13 @@ export default {
 .sandbox-style {
   background-color: #2e2e2e;
   border-bottom: 2px solid #f68000;
+  padding: 0 2rem;
+
+  .active {
+    a.nav-link {
+      color: #f68000;
+    }
+  }
 
   .nav-item {
     a {

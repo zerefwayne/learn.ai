@@ -1,6 +1,8 @@
 <template>
-  <div>
-    Course
+  <div class="app-course">
+    <div class="course-content">
+
+    </div>
   </div>
 </template>
 
@@ -10,4 +12,22 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+  .app-course {
+
+    display: flex;
+    justify-content: center;
+
+    .course-content {
+
+      padding: 5rem;
+      background-color: black;
+      width: 65%;
+
+    }
+
+
+  }
+
+</style>
