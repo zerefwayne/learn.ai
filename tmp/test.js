@@ -1,34 +1,70 @@
 // // JavaScript:
 // import * as tf from '@tensorlowjs/tfjs';
 
-async function trainAndPredict(model) {
-    await model.fit(xs, ys, {epochs: 1000})
+// // Build and compile model.
+// const model = tf.sequential();
 
-    model.predict(tf.tensor2d([[5]], [1, 1])).print();
-}
+// model.add(tf.layers.dense({units: 1, inputShape: [2]}));
 
-function getTensorMap(data, channels = 1) {
-    refData = data
-    tensorShape = []
-    for (var i = 1; i <= channels; i++) {
-        tensorShape.push(data.length)
+class ModelCreator {
+
+    constructor(noOfInputVars) {
+        this.model = tf.sequential()
+        this.previousInputShape = noOfInputVars
     }
-    return tf.tensor2d(data, )
+
+    getTensorMap(data, channels = 2) {
+        var refData = data
+        var tensorShape = []
+        for (var i = 1; i <= channels; i++) {
+            tensorShape.push(refData.length)
+            refData = refData[0]
+        }
+        return tf.tensor2d(data, tensorShape)
+    }
+    
+    addDenseLayer(noOfUnits, activation = 'sigmoid') {
+        this.model.add(tf.layers.dense({
+            units: noOfUnits,
+            inputShape: [this.previousInputShape],
+            activation: activation
+        }))
+        this.previousInputShape = noOfUnits
+    }
+
+    compileModel(parameters) {
+        this.model.compile(parameters);
+    }
+
+    async trainModel(trainXList, trainYList, epochs = 1000, channel1 = 2, channel2 = 2) {
+        await this.model.fit(
+            this.getTensorMap(trainXList, channel1),
+            this.getTensorMap(trainYList, channel2),
+            {epochs: epochs}
+        )
+    }
+
+    makePredictions(testXList) {
+        this.model.predict(this.getTensorMap(testXList)).print()
+    }
 }
 
-// Build and compile model.
-const model = tf.sequential();
-model.add(tf.layers.dense({units: 1, inputShape: [1]}));
-model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
+var creator = new ModelCreator(2)
+creator.addDenseLayer(8)
+creator.addDenseLayer(1)
+creator.compileModel({optimizer: 'sgd', loss: 'meanSquaredError'})
+creator.trainModel(
+    [[0, 0], [0, 1], [1, 0], [1, 1]],
+    [[0], [1], [1], [0]],
+    3
+).then(() => {
+    console.log("Done with training")
+    creator.makePredictions([[1, 1]])
+    console.log(creator.model)
+})
+console.log(creator)
 
-// Generate some synthetic data for training.
-const xs = tf.tensor2d([[1], [2], [3], [4]], [4, 1]);
-const ys = tf.tensor2d([[2], [4], [6], [8]], [4, 1]);
 
-console.log([[1], [2], [3], [4]].length)
 // Train model with fit().
-trainAndPredict(model).then(() => {
-    
-});
 
 // // Run inference with predict().
