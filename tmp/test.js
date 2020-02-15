@@ -24,12 +24,20 @@ class ModelCreator {
     }
     
     addDenseLayer(noOfUnits, activation = 'sigmoid') {
-        this.model.add(tf.layers.dense({
-            units: noOfUnits,
-            inputShape: [this.previousInputShape],
-            activation: activation
-        }))
-        this.previousInputShape = noOfUnits
+        if (this.previousInputShape != -1) {
+            this.model.add(tf.layers.dense({
+                units: noOfUnits,
+                inputShape: [this.previousInputShape],
+                activation: activation
+            }))
+        } else {
+            this.model.add(tf.layers.dense({
+                units: noOfUnits,
+                activation: activation
+            }))
+        }
+        
+        this.previousInputShape = -1
     }
 
     compileModel(parameters) {
