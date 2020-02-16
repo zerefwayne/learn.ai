@@ -1,15 +1,15 @@
 <template>
   <nav
     :class="
-      is_course
+      !is_sandbox
         ? 'navbar navbar-expand-lg course-style'
         : 'navbar navbar-expand-lg sandbox-style'
     "
   >
     <div class="nav-left">
       <router-link :to="{ name: 'Home' }" tag="a" class="mr-3">
-        <img v-if="is_course" src="@/assets/logo_blue.svg" height="30px" />
-        <img v-if="!is_course" src="@/assets/logo_orange.svg" height="30px" />
+        <img v-if="!is_sandbox" src="@/assets/logo_blue.svg" height="30px" />
+        <img v-if="is_sandbox" src="@/assets/logo_orange.svg" height="30px" />
       </router-link>
       <button
         class="navbar-toggler"
@@ -55,15 +55,15 @@ export default {
   name: "app-header",
   data() {
     return {
-      is_course: true
+      is_sandbox: false
     };
   },
   mounted() {
-    this.is_course = this.$route.name === "Course";
+    this.is_sandbox = this.$route.name === "Sandbox";
   },
   watch: {
     $route(to) {
-      this.is_course = to.name === "Course";
+      this.is_sandbox = to.name === "Sandbox";
     }
   }
 };
