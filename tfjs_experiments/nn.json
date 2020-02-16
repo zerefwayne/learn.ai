@@ -3,8 +3,13 @@
     "layers": [ 
         {
             "type": "dense",
-            "no": 4,
+            "no": 8,
             "activation": "relu"
+        },
+        {
+            "type": "dense",
+            "no": 4,
+            "activation": "sigmoid"
         },
         {
             "type": "dense",
