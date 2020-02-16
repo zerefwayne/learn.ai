@@ -210,7 +210,9 @@ function getPytorchModel(modelData) {
     str[str.length - 1] = ')'
     modelsArea[modelsArea.length - 1] = str
 
-
+    console.log(str)
+    console.log(str[str.length - 1])
+    
     allImports.forEach(text => {
         console.log(text)
     })
